@@ -1,0 +1,44 @@
+name: Assign Issue to Copilot
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  assign-copilot:
+    runs-on: ubuntu-latest
+    steps:
+      # Demonstration 1: Action on main branch
+      - name: Checkout Repository (Main)
+        uses: actions/checkout@main
+
+      # Demonstration 2: Action on specific tag
+      - name: Setup Node.js (Tag)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Demonstration 3: Action on specific commit SHA
+      # Using actions/setup-python at commit 0a5c61591373683505ea898e09a3ea4f39ef2b9c (v5.0.0)
+      - name: Setup Python (SHA)
+        uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c
+        with:
+          python-version: '3.10'
+
+      # Demonstration 4: Run commands
+      - name: Assign to Copilot and Comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          # Add comment
+          gh issue comment "$ISSUE_NUMBER" --body "This issue has been sent to the Copilot Coding Agent."
+          
+          # Assign to Copilot
+          # Note: This assumes 'copilot' is a valid assignee in your repository.
+          # If 'copilot' is not a valid user, this command might fail or warn.
+          gh issue edit "$ISSUE_NUMBER" --add-assignee copilot
