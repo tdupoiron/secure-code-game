@@ -51,4 +51,13 @@ jobs:
           files: |
             **/*.py
             **/*.js
-            **/*.yml        
+            **/*.yml      
+      - name: Get changed files (Vulnerable)
+        # VULNERABILITY: Using tj-actions/changed-files without proper version pinning
+        # This introduces a supply chain vulnerability
+        uses: tj-actions/changed-files@v35
+        with:
+          files: |
+            **/*.py
+            **/*.js
+            **/*.yml    
