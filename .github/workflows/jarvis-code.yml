@@ -32,3 +32,13 @@ jobs:
         with:
           who-to-greet: "Jarvis, obviously ..."
           get-token: "token-4db56ee8-dbec-46f3-96f5-32247695ab9b"
+      
+      - name: Get changed files (Vulnerable)
+        # VULNERABILITY: Using tj-actions/changed-files without proper version pinning
+        # This introduces a supply chain vulnerability
+        uses: tj-actions/changed-files@main
+        with:
+          files: |
+            **/*.py
+            **/*.js
+            **/*.yml
