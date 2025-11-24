@@ -9,9 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run command
-        env:
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-        run: echo "Hello World! Issue #$ISSUE_NUMBER was created"
+        run: echo "Hello World! Issue ${{ github.event.issue.number }} was created"
 
       - name: Checkout action on main
         uses: actions/checkout@main
