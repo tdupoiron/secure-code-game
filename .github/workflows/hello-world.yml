@@ -22,14 +22,14 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Comment on issue using commit SHA
-        uses: actions/github-script@35b1cdd1b2c1fc704b1cd9758d10f67e833fcb02
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v5
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: 'Hello World! This issue was automatically processed by our workflow.'
-            })
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            This is a multi-line test comment
+            - With GitHub **Markdown** :sparkles:
+            - Created by [create-or-update-comment][1]
+
+            [1]: https://github.com/peter-evans/create-or-update-comment
+          reactions: '+1'
