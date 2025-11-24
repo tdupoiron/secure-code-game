@@ -22,6 +22,7 @@ jobs:
           fail-on-severity: moderate
           allow-ghsas: ""
           deny-licenses: GPL-2.0, GPL-3.0
+          comment-summary-in-pr: always
 
       - name: Comment on PR about dependency review
         uses: peter-evans/create-or-update-comment@v5
