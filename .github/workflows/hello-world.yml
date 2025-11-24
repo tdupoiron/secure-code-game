@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run command
-        run: echo "Hello World! Issue ${{ github.event.issue.number }} was created"
+        run: echo "Hello World! Issue ${{ github.event.issue.number }} was created" >> $GITHUB_STEP_SUMMARY
 
       - name: Checkout action on main
         uses: actions/checkout@main
@@ -22,6 +22,7 @@ jobs:
       - name: Comment on issue using commit SHA
         uses: actions/github-script@35b1cdd1b2c1fc704b1cd9758d10f67e833fcb02
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
