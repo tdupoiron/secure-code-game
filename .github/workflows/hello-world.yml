@@ -1,68 +1,31 @@
-name: Hello World Demo
+name: Hello World Workflow
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch:
+  issues:
+    types: [opened]
 
 jobs:
-  hello-world-demo:
+  hello-world:
     runs-on: ubuntu-latest
-    
     steps:
-      # Step 1: Run commands directly
-      - name: Say Hello with shell commands
-        run: |
-          echo "Hello, World! 🌍"
-          echo "Current date: $(date)"
-          echo "Running on: $RUNNER_OS"
-          pwd
-          ls -la
+      - name: Run command
+        run: echo "Hello World! Issue #${{ github.event.issue.number }} was created"
 
-      # Step 2: Action using @main (latest version)
-      - name: Checkout repository (using @main)
+      - name: Checkout action on main
         uses: actions/checkout@main
-        with:
-          fetch-depth: 1
 
-      # Step 3: Action using @tag (specific version tag)
-      - name: Setup Node.js (using @tag)
-        uses: actions/setup-node@v4
+      - name: Setup Node action on tag
+        uses: actions/setup-node@v4.0.2
         with:
           node-version: '18'
 
-      # Step 4: Another run command after checkout
-      - name: Display repository contents
-        run: |
-          echo "Repository contents:"
-          find . -maxdepth 2 -type f -name "*.md" | head -10
-          echo "Total files: $(find . -type f | wc -l)"
-
-      # Step 5: Action using @commit (specific commit hash)
-      # Note: This uses a specific commit hash of actions/setup-python
-      - name: Setup Python (using @commit)
-        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
+      - name: Comment on issue using commit SHA
+        uses: actions/github-script@35b1cdd1b2c1fc704b1cd9758d10f67e833fcb02
         with:
-          python-version: '3.9'
-
-      # Step 6: Final run command to test Python
-      - name: Test Python installation
-        run: |
-          python --version
-          python -c "print('Hello from Python! 🐍')"
-          pip --version
-
-      # Step 7: More shell commands demonstrating environment
-      - name: Environment information
-        run: |
-          echo "=== Environment Variables ==="
-          echo "GITHUB_WORKFLOW: $GITHUB_WORKFLOW"
-          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
-          echo "GITHUB_REF: $GITHUB_REF"
-          echo "GITHUB_SHA: $GITHUB_SHA"
-          echo "=== System Information ==="
-          uname -a
-          echo "CPU cores: $(nproc)"
-          echo "Memory: $(free -h | grep '^Mem:' | awk '{print $2}')"
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Hello World! This issue was automatically processed by our workflow.'
+            })
