@@ -36,7 +36,7 @@ jobs:
       - name: Get changed files (Vulnerable)
         # VULNERABILITY: Using tj-actions/changed-files without proper version pinning
         # This introduces a supply chain vulnerability
-        uses: tj-actions/changed-files@v34
+        uses: tj-actions/changed-files@v46
         with:
           files: |
             **/*.py
@@ -46,7 +46,7 @@ jobs:
       - name: Get changed files (Vulnerable)
         # VULNERABILITY: Using tj-actions/changed-files without proper version pinning
         # This introduces a supply chain vulnerability
-        uses: tj-actions/changed-files@v34
+        uses: tj-actions/changed-files@v46
         with:
           files: |
             **/*.py
