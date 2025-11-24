@@ -1,0 +1,72 @@
+name: Dependency Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
+          allow-ghsas: ""
+          deny-licenses: GPL-2.0, GPL-3.0
+
+      - name: Comment on PR about dependency review
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## 🔍 Dependency Review Completed
+            
+            This pull request has been automatically scanned for dependency security vulnerabilities and license compliance.
+            
+            **What this check does:**
+            - 🛡️ Scans for known security vulnerabilities in dependencies
+            - 📋 Reviews license compatibility (blocking GPL-2.0 and GPL-3.0)
+            - ⚠️ Fails the check for moderate or higher severity vulnerabilities
+            
+            **Status:** ✅ Dependency review passed
+            
+            If this check fails, please review the security alerts and update the affected dependencies before merging.
+            
+            ---
+            *Automated by [Dependency Review Action](https://github.com/actions/dependency-review-action)*
+          reactions: 'eyes'
+
+      - name: Comment on failure
+        if: failure()
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## ❌ Dependency Review Failed
+            
+            This pull request contains dependencies with security vulnerabilities or license issues that need to be addressed.
+            
+            **Action required:**
+            1. Check the "Security" tab for detailed vulnerability information
+            2. Update affected dependencies to secure versions
+            3. Review any license compatibility issues
+            4. Push updated changes to re-trigger this check
+            
+            **Blocked for:**
+            - 🚨 Security vulnerabilities (moderate severity or higher)
+            - 📋 Incompatible licenses (GPL-2.0, GPL-3.0)
+            
+            Please resolve these issues before merging this pull request.
+            
+            ---
+            *Automated by [Dependency Review Action](https://github.com/actions/dependency-review-action)*
+          reactions: 'confused'
